@@ -1,10 +1,14 @@
-<img src="assets/icon.png" align="right" width="96" height="96" alt="TradePlus icon">
+<p align="center">
+  <img src="assets/icon.png" width="192" height="192" alt="TradePlus icon">
+</p>
 
 # TradePlus
 
 Preview future villager trades and reroll the entire trade set, right inside the vanilla trading screen.
 
-![README views](https://count.getloli.com/@TradePlus?theme=eva&padding=4&offset=0&align=top&scale=1&pixelated=1&darkmode=auto)
+<p align="right">
+  <img src="https://count.getloli.com/@TradePlus?theme=eva&amp;padding=4&amp;offset=0&amp;align=top&amp;scale=1&amp;pixelated=1&amp;darkmode=auto" height="96" alt="README views">
+</p>
 
 ![Paper 26.3](https://img.shields.io/badge/Paper-26.3-22c55e)
 ![Java 25](https://img.shields.io/badge/Java-25-orange)
