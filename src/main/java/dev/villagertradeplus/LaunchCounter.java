@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /** One best-effort request per successful enable, with no server or player identifiers. */
 final class LaunchCounter {
-    private static final URI ENDPOINT = URI.create("https://count.getloli.com/@TradePlus-launch?theme=booru-lewd&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto");
+    private static final URI ENDPOINT = URI.create("https://count.getloli.com/@TradePlus-launch");
     private final URI endpoint;
 
     LaunchCounter() { this(ENDPOINT); }
@@ -33,7 +33,7 @@ final class LaunchCounter {
         try (var client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3))
                 .followRedirects(HttpClient.Redirect.NEVER).build()) {
             var request = HttpRequest.newBuilder(endpoint).timeout(Duration.ofSeconds(5))
-                    .header("User-Agent", "TradePlus").GET().build();
+                    .header("User-Agent", "VillagerTradePlus").GET().build();
             var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             // The counter is updated by the GET; the image itself is not needed.
             try (var ignored = response.body()) {

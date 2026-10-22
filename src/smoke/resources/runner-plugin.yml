@@ -1,8 +1,8 @@
-name: TradePlusTest
+name: VillagerTradePlusTest
 version: 1.0
-main: dev.tradeplus.SmokeRunner
+main: dev.villagertradeplus.SmokeRunner
 api-version: '26.3'
-depend: [TradePlus]
+depend: [VillagerTradePlus]
 commands:
   smoke:
     permission: tradeplustest.admin

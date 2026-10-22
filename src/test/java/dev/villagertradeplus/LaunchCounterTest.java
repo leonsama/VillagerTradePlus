@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -50,7 +50,7 @@ class LaunchCounterTest {
         assertEquals(1, tasks.size());
         tasks.getFirst().run();
         assertEquals(1, hits.get());
-        assertEquals(java.util.Arrays.asList("GET", "/counter?theme=test", "TradePlus", null, null, ""), observed);
+        assertEquals(java.util.Arrays.asList("GET", "/counter?theme=test", "VillagerTradePlus", null, null, ""), observed);
         assertTrue(failures.isEmpty());
     }
 

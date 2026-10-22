@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 
 import io.netty.channel.embedded.EmbeddedChannel;
 import java.io.*;
@@ -61,6 +61,21 @@ public final class SmokeChecks {
             var generated = generator.generate(source, true);
             check(!generated.current().isEmpty() && generated.plan().levels().size() == 4, "full reroll candidate covers current and future levels");
             source.setRecipes(generated.current()); store.write(source, generated.plan());
+            var legacyPlan = java.util.Objects.requireNonNull(NamespacedKey.fromString("tradeplus:plan_v1"));
+            var legacyLock = java.util.Objects.requireNonNull(NamespacedKey.fromString("tradeplus:traded"));
+            var currentPlan = new NamespacedKey(plugin, "plan_v1");
+            var currentLock = new NamespacedKey(plugin, "traded");
+            var data = source.getPersistentDataContainer();
+            byte[] saved = store.raw(source);
+            data.remove(currentPlan);
+            data.set(legacyPlan, org.bukkit.persistence.PersistentDataType.BYTE_ARRAY, saved);
+            data.set(legacyLock, org.bukkit.persistence.PersistentDataType.BYTE, (byte) 1);
+            check(Arrays.equals(saved, store.raw(source)) && store.locked(source), "legacy namespace preserves trade plan and permanent lock");
+            store.restore(source, saved); store.lock(source);
+            check(data.has(currentPlan) && data.has(currentLock) && !data.has(legacyPlan) && !data.has(legacyLock),
+                    "successful writes migrate old villager keys to villagertradeplus namespace");
+            data.remove(currentLock);
+
             var cancellation = new Listener() {
                 @EventHandler(priority = EventPriority.HIGHEST)
                 public void cancel(VillagerAcquireTradeEvent event) {

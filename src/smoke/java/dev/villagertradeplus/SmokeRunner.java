@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 import java.lang.reflect.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -10,8 +10,8 @@ public final class SmokeRunner extends JavaPlugin {
     private Class<?> checks;
     private JavaPlugin subject;
     @Override public void onEnable() {
-        subject = (JavaPlugin) Bukkit.getPluginManager().getPlugin("TradePlus");
-        try { checks = subject.getClass().getClassLoader().loadClass("dev.tradeplus.SmokeChecks"); }
+        subject = (JavaPlugin) Bukkit.getPluginManager().getPlugin("VillagerTradePlus");
+        try { checks = subject.getClass().getClassLoader().loadClass("dev.villagertradeplus.SmokeChecks"); }
         catch (ClassNotFoundException error) { throw new IllegalStateException("Use the smoke JAR on this test server", error); }
         Bukkit.getScheduler().runTaskLater(this, () -> {
             try { checks.getMethod("run", JavaPlugin.class).invoke(null, subject); }

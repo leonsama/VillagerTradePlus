@@ -1,8 +1,21 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DoublePressTest {
+    @Test void singleModeTriggersImmediatelyAndClearsArmedPair() {
+        var detector = new DoublePress();
+        assertFalse(detector.press(0, 350, true));
+        assertTrue(detector.press(10, 350, false));
+        assertTrue(detector.press(20, 350, false));
+        assertFalse(detector.press(30, 350, true));
+        assertTrue(detector.press(40, 350, true));
+    }
+    @Test void cooldownBoundaryIs400Millis() {
+        assertTrue(VillagerTradePlus.coolingDown(399_999_999, 0, 400));
+        assertFalse(VillagerTradePlus.coolingDown(400_000_000, 0, 400));
+        assertFalse(VillagerTradePlus.coolingDown(400_000_001, 0, 400));
+    }
     @Test void singlePressDoesNothing() { assertFalse(new DoublePress().press(0, 350)); }
     @Test void pairWithinWindowTriggersOnce() {
         var detector = new DoublePress();

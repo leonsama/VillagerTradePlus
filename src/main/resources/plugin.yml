@@ -1,19 +1,19 @@
-name: TradePlus
+name: VillagerTradePlus
 version: '${version}'
-main: dev.tradeplus.TradePlus
+main: dev.villagertradeplus.VillagerTradePlus
 api-version: '26.3'
-softdepend: [TradeCycle, VillagerVision]
-description: 原版交易界面内预览全部交易，双击 F 重刷整套交易。
+description: Preview future trades and press F to reroll in the vanilla trading screen.
 website: https://github.com/leonsama/VillagerTradePlus
-authors: [TradePlus contributors, Salvador Reyna, TradeCycle Authors and Contributors]
+authors: [leonsama]
 commands:
-  tradeplus:
-    description: TradePlus 帮助与配置重载
-    usage: /tradeplus [reload]
+  villagertradeplus:
+    aliases: [tradeplus]
+    description: VillagerTradePlus help and config reload
+    usage: /villagertradeplus [reload]
 permissions:
-  tradeplus.use:
+  villagertradeplus.use:
     default: true
-  tradeplus.cycle:
+  villagertradeplus.cycle:
     default: true
-  tradeplus.admin:
+  villagertradeplus.admin:
     default: op

@@ -1,7 +1,7 @@
 plugins { id 'java' }
 
-group = 'dev.tradeplus'
-version = '0.1.3'
+group = 'dev.villagertradeplus'
+version = '0.1.4'
 
 repositories {
     mavenCentral()
@@ -45,7 +45,7 @@ tasks.register('smokeJar', Jar) {
 }
 tasks.register('smokeRunnerJar', Jar) {
     dependsOn smokeClasses
-    archiveBaseName = 'TradePlusTest'
-    from(sourceSets.smoke.output) { include 'dev/tradeplus/SmokeRunner.class' }
+    archiveBaseName = 'VillagerTradePlusTest'
+    from(sourceSets.smoke.output) { include 'dev/villagertradeplus/SmokeRunner.class' }
     from('src/smoke/resources/runner-plugin.yml') { rename { 'plugin.yml' } }
 }

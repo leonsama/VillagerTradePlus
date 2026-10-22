@@ -1,0 +1,17 @@
+Villager Trade Plus 0.1.4 verification
+Date: 2026-10-23
+Java: Microsoft OpenJDK 25.0.1
+JUnit: 26 passed
+Paper 26.3 build 211: two independent-process rounds, 153 / 154 assertions passed.
+JAR: VillagerTradePlus-0.1.4.jar
+Source ZIP: VillagerTradePlus-0.1.4-source.zip
+Package/main: dev.villagertradeplus.VillagerTradePlus
+Plugin ID/config folder: VillagerTradePlus
+Primary command/permissions: villagertradeplus; old command alias and explicit permissions supported.
+Defaults: single F, 400ms cooldown; optional double F with 350ms window.
+Player messages and unlock lore follow client locale; console always English; obsolete console language setting removed.
+Removed redundant future-trade lore; preserved original lore/enchantments and actual trade results.
+Legacy config copied only when new config is absent; legacy PDC plans and locks readable and migrated on writes.
+Default config comments in English; Moe Counter endpoint simplified to https://count.getloli.com/@TradePlus-launch.
+Automatic and native-server tests passed; graphical Minecraft client visual acceptance not performed.
+Test-only: subclass Mockito mock maker avoids JVM agent self-attach; not included in release JAR.

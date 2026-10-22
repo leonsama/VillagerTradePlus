@@ -16,12 +16,19 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Paper 文件展开失败' }
     & .\gradlew.bat --no-daemon smokeJar smokeRunnerJar
     if ($LASTEXITCODE -ne 0) { throw '服务端测试插件构建失败' }
-    Copy-Item -LiteralPath build\libs\VillagerTradePlus-0.1.3-smoke.jar -Destination test-server\plugins\TradePlus.jar
-    Copy-Item -LiteralPath build\libs\TradePlusTest-0.1.3.jar -Destination test-server\plugins\TradePlusTest.jar
+    # Remove only the previous test JAR, whose internal plugin name was TradePlus.
+    if (Test-Path -LiteralPath test-server\plugins\TradePlus.jar) {
+        Remove-Item -LiteralPath test-server\plugins\TradePlus.jar
+    }
+    if (Test-Path -LiteralPath test-server\plugins\TradePlusTest.jar) {
+        Remove-Item -LiteralPath test-server\plugins\TradePlusTest.jar
+    }
+    Copy-Item -LiteralPath build\libs\VillagerTradePlus-0.1.4-smoke.jar -Destination test-server\plugins\VillagerTradePlus.jar
+    Copy-Item -LiteralPath build\libs\VillagerTradePlusTest-0.1.4.jar -Destination test-server\plugins\VillagerTradePlusTest.jar
     # Integration tests must not inflate the public launch counter.
-    New-Item -ItemType Directory -Force -Path test-server\plugins\TradePlus | Out-Null
+    New-Item -ItemType Directory -Force -Path test-server\plugins\VillagerTradePlus | Out-Null
     $testConfig = (Get-Content -LiteralPath src\main\resources\config.yml -Raw) -replace '(launch-counter:\s*\r?\n\s*enabled:) true', '$1 false'
-    Set-Content -LiteralPath test-server\plugins\TradePlus\config.yml -Value $testConfig -Encoding utf8
+    Set-Content -LiteralPath test-server\plugins\VillagerTradePlus\config.yml -Value $testConfig -Encoding utf8
     @'
 server-ip=127.0.0.1
 server-port=25579

@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 import java.util.*;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.MerchantRecipe;
@@ -18,13 +18,13 @@ final class PlanGenerator {
             temporary.setVillagerLevel(source.getVillagerLevel());
             if (!reroll) temporary.setRecipes(Recipes.copyAll(source.getRecipes()));
             var current = Recipes.copyAll(temporary.getRecipes());
-            if (current.isEmpty()) throw new IllegalStateException("没有生成有效的当前交易");
+            if (current.isEmpty()) throw new IllegalStateException("No valid current trades generated");
             var future = new TreeMap<Integer, List<MerchantRecipe>>();
             int known = current.size();
             for (int level = source.getVillagerLevel() + 1; level <= 5; level++) {
-                if (!temporary.increaseLevel(1)) throw new IllegalStateException("无法模拟等级 " + level);
+                if (!temporary.increaseLevel(1)) throw new IllegalStateException("Could not simulate level " + level);
                 var generated = temporary.getRecipes();
-                if (generated.size() < known) throw new IllegalStateException("模拟交易数量意外减少");
+                if (generated.size() < known) throw new IllegalStateException("Simulated trade count unexpectedly decreased");
                 future.put(level, Recipes.copyAll(generated.subList(known, generated.size())));
                 known = generated.size();
             }

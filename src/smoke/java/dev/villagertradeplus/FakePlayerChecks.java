@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.*;
@@ -39,7 +39,7 @@ final class FakePlayerChecks {
         var server = ((CraftServer) Bukkit.getServer()).getServer();
         var world = ((CraftWorld) Bukkit.getWorlds().getFirst()).getHandle();
         UUID id = UUID.randomUUID();
-        var nativePlayer = new ServerPlayer(server, world, new GameProfile(id, "TradePlusTest"), ClientInformation.createDefault());
+        var nativePlayer = new ServerPlayer(server, world, new GameProfile(id, "VillagerTradePlusTest"), ClientInformation.createDefault());
         var connection = new Connection(PacketFlow.SERVERBOUND);
         var channel = new EmbeddedChannel(); channel.pipeline().addLast("packet_handler", new ChannelDuplexHandler());
         connection.channel = channel; connection.address = new InetSocketAddress("127.0.0.1", 25578); connection.preparing = false;
@@ -58,10 +58,14 @@ final class FakePlayerChecks {
             channel.finishAndReleaseAll();
         };
         try {
+            displayIsolationChecks(plugin, report);
             configurationChecks(plugin, report, nativePlayer, listener, store);
+            expect(report, !(boolean) field(plugin, VillagerTradePlus.class, "doublePressEnabled"), "default mode is single F");
+            plugin.getConfig().set("double-press-enabled", true);
+            features(plugin, true, true);
             player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 1200, 0));
             player.openMerchant(villager, false);
-            @SuppressWarnings("unchecked") var sessions = (Map<UUID, TradeSession>) field(plugin, TradePlus.class, "sessions");
+            @SuppressWarnings("unchecked") var sessions = (Map<UUID, TradeSession>) field(plugin, VillagerTradePlus.class, "sessions");
             var session = sessions.get(id);
             expect(report, session != null && session.view == player.getOpenInventory(), "native merchant open attaches correct session and window");
             Object outgoing; ClientboundMerchantOffersPacket offers = null;
@@ -70,7 +74,7 @@ final class FakePlayerChecks {
             var merchant = (MerchantMenu) nativePlayer.containerMenu;
             expect(report, !nativePlayer.isImmobile(), "native test player is mobile");
             expect(report, merchant.stillValid(nativePlayer), "native merchant is reachable");
-            var validity = TradePlus.class.getDeclaredMethod("valid", org.bukkit.entity.Player.class, Villager.class, TradeSession.class);
+            var validity = VillagerTradePlus.class.getDeclaredMethod("valid", org.bukkit.entity.Player.class, Villager.class, TradeSession.class);
             validity.setAccessible(true);
             nativePlayer.setPos(100, 70, 100);
             expect(report, !(boolean) validity.invoke(plugin, player, villager, session), "distant player cannot operate villager session");
@@ -83,6 +87,8 @@ final class FakePlayerChecks {
             nativeVillager.setTradingPlayer(other);
             expect(report, !(boolean) validity.invoke(plugin, player, villager, session), "another trader owns villager and cannot be displaced by reroll");
             nativeVillager.setTradingPlayer(nativePlayer);
+            expect(report, previewLore(session).contains("Unlocks at"), "English client receives English unlock lore only");
+            setLocale(nativePlayer, "zh_cn");
             var before = store.raw(villager);
             var top = player.getOpenInventory().getTopInventory();
             top.setItem(0, new ItemStack(Material.EMERALD, 13)); top.setItem(1, new ItemStack(Material.BOOK, 7));
@@ -95,6 +101,9 @@ final class FakePlayerChecks {
             expect(report, session.rerollQueued, "second native F packet queues exactly one reroll");
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 try {
+                    expect(report, previewLore(session).contains("解锁") && !previewLore(session).contains("未来交易"),
+                            "Chinese client receives concise Chinese unlock lore in open window");
+                    setLocale(nativePlayer, "en_us");
                     expect(report, !Arrays.equals(before, store.raw(villager)), "two native F packets reroll current and future plans");
                     expect(report, top.getItem(0) == null && top.getItem(1) == null
                                     && player.getInventory().contains(Material.EMERALD, 13) && player.getInventory().contains(Material.BOOK, 7)
@@ -108,6 +117,7 @@ final class FakePlayerChecks {
                     press(listener, merchant); press(listener, merchant);
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         try {
+                            expect(report, previewLore(session).contains("Unlocks at"), "changing client language refreshes existing preview next tick");
                             expect(report, Arrays.equals(rerolled, store.raw(villager)), "native repeated double F respects villager cooldown");
                             // Reset the armed detector by closing; a press from a previous view cannot carry over.
                             player.closeInventory(); player.openMerchant(villager, false);
@@ -116,11 +126,23 @@ final class FakePlayerChecks {
                             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                                 try {
                                     expect(report, Arrays.equals(rerolled, store.raw(villager)), "native close/reopen clears double-F sequence");
-                                    nativeTradeChecks(plugin, report, nativePlayer, villager, store);
-                                    villager.remove();
-                                    expect(report, !(boolean) validity.invoke(plugin, player, villager, sessions.get(id)),
-                                            "removed villager invalidates existing session");
-                                    cleanup.run(); complete.accept(report);
+                                    plugin.getConfig().set("double-press-enabled", false);
+                                    features(plugin, true, true);
+                                    player.openMerchant(villager, false);
+                                    @SuppressWarnings("unchecked") var cooldowns = (Map<UUID, Long>) field(plugin, VillagerTradePlus.class, "cooldowns");
+                                    cooldowns.put(villager.getUniqueId(), System.nanoTime() - 400_000_001L);
+                                    press(listener, (MerchantMenu) nativePlayer.containerMenu);
+                                    expect(report, sessions.get(id).rerollQueued, "single F queues reroll immediately after mode reload");
+                                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                                        try {
+                                            expect(report, !Arrays.equals(rerolled, store.raw(villager)), "single native F rerolls after 400ms cooldown");
+                                            nativeTradeChecks(plugin, report, nativePlayer, villager, store);
+                                            villager.remove();
+                                            expect(report, !(boolean) validity.invoke(plugin, player, villager, sessions.get(id)),
+                                                    "removed villager invalidates existing session");
+                                            cleanup.run(); complete.accept(report);
+                                        } catch (Throwable error) { fail(plugin, cleanup, error); }
+                                    }, 1);
                                 } catch (Throwable error) { fail(plugin, cleanup, error); }
                             }, 1);
                         } catch (Throwable error) { fail(plugin, cleanup, error); }
@@ -128,6 +150,49 @@ final class FakePlayerChecks {
                 } catch (Throwable error) { fail(plugin, cleanup, error); }
             }, 1);
         } catch (Throwable error) { cleanup.run(); throw error; }
+    }
+    private static void displayIsolationChecks(JavaPlugin plugin, List<String> report) throws Exception {
+        var item = new ItemStack(Material.DIAMOND_SWORD);
+        var meta = item.getItemMeta();
+        var originalLore = net.kyori.adventure.text.Component.text("Original lore");
+        meta.lore(List.of(originalLore));
+        meta.addEnchant(org.bukkit.enchantments.Enchantment.UNBREAKING, 3, true);
+        item.setItemMeta(meta);
+        var recipe = new MerchantRecipe(item, 10);
+        recipe.setIngredients(List.of(new ItemStack(Material.EMERALD, 5)));
+        var plan = new TradePlan("minecraft:librarian", "minecraft:plains", Map.of(2, List.of(recipe)), Map.of());
+        var display = VillagerTradePlus.class.getDeclaredMethod("displayOffers", TradePlan.class, int.class, boolean.class);
+        display.setAccessible(true);
+        @SuppressWarnings("unchecked") var english = (List<Object>) display.invoke(plugin, plan, 1, false);
+        @SuppressWarnings("unchecked") var chinese = (List<Object>) display.invoke(plugin, plan, 1, true);
+        var en = org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(
+                ((net.minecraft.world.item.trading.MerchantOffer) english.getFirst()).getResult());
+        var zh = org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(
+                ((net.minecraft.world.item.trading.MerchantOffer) chinese.getFirst()).getResult());
+        var plain = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText();
+        expect(report, en.getItemMeta().lore().size() == 2 && zh.getItemMeta().lore().size() == 2
+                        && plain.serialize(en.getItemMeta().lore().get(1)).equals("Unlocks at Apprentice (Lv.2)")
+                        && plain.serialize(zh.getItemMeta().lore().get(1)).equals("学徒（Lv.2）解锁"),
+                "language-specific display copies remain isolated and append exactly one unlock line");
+        expect(report, plain.serialize(en.getItemMeta().lore().getFirst()).equals("Original lore")
+                        && en.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.UNBREAKING) == 3
+                        && zh.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.UNBREAKING) == 3,
+                "both display languages preserve original lore and enchantments");
+        expect(report, recipe.getResult().equals(item) && recipe.getResult().getItemMeta().lore().size() == 1,
+                "display generation never mutates persisted or actual trade results");
+    }
+    private static String previewLore(TradeSession session) {
+        var offer = (net.minecraft.world.item.trading.MerchantOffer) session.futureOffers.getFirst();
+        var item = org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(offer.getResult());
+        var lore = item.getItemMeta().lore();
+        if (lore == null || lore.size() != 1) throw new AssertionError("Expected exactly one unlock lore line");
+        return net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(lore.getFirst());
+    }
+    private static void setLocale(ServerPlayer player, String locale) {
+        var current = player.clientInformation();
+        player.updateOptions(new ClientInformation(locale, current.viewDistance(), current.chatVisibility(),
+                current.chatColors(), current.modelCustomisation(), current.mainHand(),
+                current.textFilteringEnabled(), current.allowsListing(), current.particleStatus()));
     }
     private static void press(ServerGamePacketListenerImpl listener, MerchantMenu menu) {
         listener.handleContainerClick(new ServerboundContainerClickPacket(menu.containerId, menu.getStateId(), (short) 0,
@@ -137,7 +202,7 @@ final class FakePlayerChecks {
         plugin.getConfig().set("features.reroll.enabled", reroll);
         plugin.getConfig().set("features.preview.enabled", preview);
         plugin.saveConfig();
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tradeplus reload");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "villagertradeplus reload");
     }
     private static void configurationChecks(JavaPlugin plugin, List<String> report, ServerPlayer nativePlayer,
                                             ServerGamePacketListenerImpl listener, PlanStore store) throws Exception {
@@ -146,7 +211,7 @@ final class FakePlayerChecks {
             entity.setAdult(); entity.setAI(false); entity.setGravity(false); entity.setInvulnerable(true);
             entity.setProfession(Villager.Profession.LIBRARIAN);
         });
-        @SuppressWarnings("unchecked") var sessions = (Map<UUID, TradeSession>) field(plugin, TradePlus.class, "sessions");
+        @SuppressWarnings("unchecked") var sessions = (Map<UUID, TradeSession>) field(plugin, VillagerTradePlus.class, "sessions");
         try {
             for (boolean[] mode : List.of(new boolean[]{false, false}, new boolean[]{true, false},
                     new boolean[]{false, true}, new boolean[]{true, true})) {
@@ -218,8 +283,8 @@ final class FakePlayerChecks {
         byte[] plan = store.raw(villager);
         // Call the action directly here to verify the guard independently of the current cooldown.
         try {
-            @SuppressWarnings("unchecked") var sessions = (Map<UUID, TradeSession>) field(plugin, TradePlus.class, "sessions");
-            var method = TradePlus.class.getDeclaredMethod("reroll", org.bukkit.entity.Player.class, TradeSession.class);
+            @SuppressWarnings("unchecked") var sessions = (Map<UUID, TradeSession>) field(plugin, VillagerTradePlus.class, "sessions");
+            var method = VillagerTradePlus.class.getDeclaredMethod("reroll", org.bukkit.entity.Player.class, TradeSession.class);
             method.setAccessible(true); method.invoke(plugin, player, sessions.get(player.getUniqueId()));
         } catch (Exception error) { throw new IllegalStateException(error); }
         expect(report, Arrays.equals(plan, store.raw(villager)), "traded villager rejects reroll without altering plan");

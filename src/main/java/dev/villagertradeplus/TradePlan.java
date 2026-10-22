@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 import java.util.*;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.MerchantRecipe;

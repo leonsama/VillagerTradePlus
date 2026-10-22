@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.inventory.InventoryView;

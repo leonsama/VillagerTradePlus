@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 
 import io.netty.channel.*;
 import java.lang.reflect.*;
@@ -69,7 +69,7 @@ final class Paper263Adapter implements AutoCloseable {
             if (channels.putIfAbsent(player.getUniqueId(), channel) != null) return;
             channel.pipeline().addBefore("packet_handler", HANDLER, handler(player.getUniqueId()));
         } catch (ReflectiveOperationException | RuntimeException error) {
-            channels.remove(player.getUniqueId()); throw new IllegalStateException("无法安装 Paper 26.3 适配器", error);
+            channels.remove(player.getUniqueId()); throw new IllegalStateException("Could not install Paper 26.3 adapter", error);
         }
     }
     ChannelDuplexHandler handler(UUID playerId) {

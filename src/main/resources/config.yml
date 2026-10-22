@@ -1,21 +1,23 @@
 features:
   reroll:
-    # 关闭后不接管双击 F；村民的正常交易不受影响。
+    # When disabled, F keeps its vanilla behavior.
     enabled: true
   preview:
-    # 关闭后不显示未来交易；已保存的交易计划仍会在升级时兑现。
+    # Hide future trades when disabled; saved plans are still applied on level-up.
     enabled: true
 
-# 作者为了满足一点点虚荣心，偷偷加了个加载计数器 QAQ
-# 每次成功启用插件，异步访问一次固定的 Moe Counter 链接；不会在重载配置时重复计数。
-# 插件不采集或附带设备信息、玩家数据、服务器地址、UUID 或其他标识。
-# 计数服务仍可看到网络请求的来源 IP；服务方的日志策略由其自行管理。
-# 保持开启会让作者很开心 (〃'▽'〃)，不喜欢就设为 false，完全不影响交易功能！
+# Sends one request to Moe Counter (https://count.getloli.com/@TradePlus-launch) on each startup, with no personal or device information included. Keeping it enabled makes the author happy (〃'▽'〃)!
 launch-counter:
   enabled: true
 
-# F 指“交换副手”绑定动作。仅在交易界面的物品格上快速按两次触发。
+# Player prompts follow client language: Chinese for zh clients, English otherwise.
+# Console output is always English. F means the player's swap-offhand binding.
+# Hover over an item slot in the trade screen to reroll.
+# false: press F once; true: double-tap F.
+double-press-enabled: false
+# Maximum time between presses in double-tap mode only (milliseconds).
 double-press-millis: 350
-cycle-cooldown-millis: 500
-# 最大操作距离（方块）。
+# Minimum time between successful rerolls of the same villager (milliseconds).
+cycle-cooldown-millis: 400
+# Maximum interaction distance in blocks.
 interaction-distance: 6.0

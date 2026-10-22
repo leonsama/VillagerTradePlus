@@ -1,4 +1,4 @@
-package dev.tradeplus;
+package dev.villagertradeplus;
 import java.io.IOException;
 import java.util.*;
 import org.bukkit.inventory.MerchantRecipe;

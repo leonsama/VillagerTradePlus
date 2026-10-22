@@ -11,6 +11,8 @@ foreach ($candidate in $candidates) {
 if (!$selected) { throw '未找到 JDK 25，请使用 .\build.ps1 -JavaHome <JDK25目录>' }
 $env:JAVA_HOME = $selected
 $env:PATH = "$selected\bin;$env:PATH"
+# Keep the wrapper distribution and caches inside the project so the build works in confined sandboxes.
+$env:GRADLE_USER_HOME = Join-Path $PSScriptRoot '.tools\gradle-home'
 Push-Location $PSScriptRoot
 try {
     & .\gradlew.bat --no-daemon clean build

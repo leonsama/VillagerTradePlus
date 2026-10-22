@@ -19,7 +19,7 @@ English · [简体中文](README.zh-hans.md) · [Modrinth](https://modrinth.com/
 ## Features
 
 - See current and future trades, including enchantments and required villager levels.
-- Double-tap **F** over an inventory slot to reroll current and future trades together. Only untraded adult novices are eligible.
+- Press **F** over an inventory slot to reroll current and future trades together. Only untraded adult novices are eligible.
 - Keep trade plans across world saves. Enable rerolling and previews independently.
 
 The first preview generates and saves future trades, which are applied as the villager levels up. Future prices are base prices; actual purchases retain vanilla discounts.
@@ -30,13 +30,13 @@ Tested on **Paper 26.3 build 211 / Java 25**. Other Paper 26.3 builds are expect
 
 Download the JAR from [Modrinth](https://modrinth.com/project/villagertradeplus) or [Releases](https://github.com/leonsama/VillagerTradePlus/releases/latest), or build with `./gradlew build`. Place `VillagerTradePlus-x.x.x.jar` in `plugins/` and restart. No client mods or extra plugins. Replace older TradePlus/VillagerTradePlus JARs; remove TradeCycle and VillagerVision if installed.
 
-Double-tap F within **350 ms**; rerolls have a **500 ms** cooldown. F means your vanilla “swap offhand” binding, with the cursor over an inventory slot.
+Press F once to reroll; the default cooldown is **400 ms** per villager. Enable `double-press-enabled` for double-tap mode (**350 ms** between presses). F means your vanilla “swap offhand” binding, with the cursor over an inventory slot. Existing configured cooldowns are preserved.
 
 ## Configuration
 
-The internal plugin name, configuration folder and commands remain `TradePlus` for upgrade compatibility.
+The plugin ID is `VillagerTradePlus`, with Java package `dev.villagertradeplus`. On upgrade, the old `plugins/TradePlus/config.yml` is copied if the new config does not exist; existing settings and villager plans are preserved. `/tradeplus` remains an alias, and explicitly assigned old permissions remain supported unless a new permission is explicitly assigned.
 
-`plugins/TradePlus/config.yml`:
+`plugins/VillagerTradePlus/config.yml`:
 
 ```yaml
 features:
@@ -46,19 +46,22 @@ features:
     enabled: true
 launch-counter:
   enabled: true
+double-press-enabled: false
 double-press-millis: 350
-cycle-cooldown-millis: 500
+cycle-cooldown-millis: 400
 interaction-distance: 6.0
 ```
 
-Run `/tradeplus reload` and reopen the trading screen after changes. Disabling previews keeps saved plans intact; rerolling always replaces the whole plan.
+Chinese clients receive Chinese prompts; all other clients receive English. Prompts and open previews follow language changes automatically. Console output is always English; no language setting is needed.
 
-[A tiny vanity counter](https://count.getloli.com/@TradePlus-launch?theme=booru-lewd&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto) QAQ — keeping it on makes the author happy (〃'▽'〃)! No player or device details attached; disable with `launch-counter.enabled: false`.
+Run `/villagertradeplus reload` and reopen the trading screen after changes. Disabling previews keeps saved plans intact; rerolling always replaces the whole plan.
 
-Permissions: `tradeplus.use` and `tradeplus.cycle` default to everyone; `tradeplus.admin` defaults to operators.
+[Launch counter](https://count.getloli.com/@TradePlus-launch?theme=booru-lewd&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto) — requested once per startup, with no personal or device information attached. Keeping it on makes the author happy (〃'▽'〃)! Disable with `launch-counter.enabled: false`.
+
+Permissions: `villagertradeplus.use` and `villagertradeplus.cycle` default to everyone; `villagertradeplus.admin` defaults to operators.
 
 ## Development & license
 
 Build: `./gradlew build` (or `./build.ps1` on Windows). See [TESTING.md](TESTING.md) for verification and server tests. Icon: [assets/icon.png](assets/icon.png).
 
-Adapted from [TradeCycle](https://github.com/S42yt/TradeCycle) (MIT, TradeCycle Authors and Contributors) and [VillagerVision](https://github.com/salvadorreynaa/VillagerVision) (GPL-3.0, Salvador Reyna). Distributed under **GPL-3.0**; see [NOTICE.md](NOTICE.md) and [LICENSE](LICENSE).
+Inspired by [TradeCycle](https://github.com/S42yt/TradeCycle) (MIT, TradeCycle Authors and Contributors) and [VillagerVision](https://github.com/salvadorreynaa/VillagerVision) (GPL-3.0, Salvador Reyna). Distributed under **GPL-3.0**; see [NOTICE.md](NOTICE.md) and [LICENSE](LICENSE).
