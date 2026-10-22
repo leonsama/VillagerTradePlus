@@ -57,6 +57,8 @@ public final class TradePlus extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         Bukkit.getScheduler().runTaskTimer(this, this::validateSessions, 10, 10);
         getLogger().info("TradePlus enabled: Paper 26.3 / Java 25; reroll=" + rerollEnabled + "; preview=" + previewEnabled);
+        new LaunchCounter().recordIfEnabled(getConfig().getBoolean("launch-counter.enabled", true),
+                task -> Thread.ofVirtual().name("TradePlus-launch-counter").start(task), getLogger()::fine);
     }
     @Override public void onDisable() {
         for (TradeSession session : List.copyOf(sessions.values())) {

@@ -1,0 +1,9 @@
+TradePlus 0.1.2 verification
+Date: 2026-10-22
+Java: Microsoft OpenJDK 25.0.1
+Server: Paper 26.3 build 211
+JUnit: 17 passed
+Public launch counter: disabled on the integration test server
+Paper round 1: 143 passed
+Paper round 2: 143 passed
+Graphical Java client acceptance: not performed

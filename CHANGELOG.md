@@ -1,5 +1,13 @@
 # 更新记录
 
+## 0.1.2
+
+- README 顶部改用 Moe Counter，中文文档重命名为 `README.zh-hans.md`，移除底部计数提示。
+- 新增 `launch-counter.enabled`，默认开启；每次成功启用插件异步请求一次固定计数链接，重载配置不重复计数。
+- 统计不附带玩家、设备或服务器标识；设置连接和请求超时，不跟随重定向、不主动重试，失败不影响交易。
+- 补充已测试的 Paper 26.3 build 211 与其他版本的兼容边界，增加最新 Release 下载入口。
+- 新增加载计数的本地 HTTP 自动测试；真实 Paper 测试关闭公共计数，避免污染数据。
+
 ## 0.1.1
 
 - 新增独立开关：`features.reroll.enabled` 和 `features.preview.enabled`，默认开启。

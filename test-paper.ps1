@@ -16,8 +16,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Paper 文件展开失败' }
     & .\gradlew.bat --no-daemon smokeJar smokeRunnerJar
     if ($LASTEXITCODE -ne 0) { throw '服务端测试插件构建失败' }
-    Copy-Item -LiteralPath build\libs\TradePlus-0.1.1-smoke.jar -Destination test-server\plugins\TradePlus.jar
-    Copy-Item -LiteralPath build\libs\TradePlusTest-0.1.1.jar -Destination test-server\plugins\TradePlusTest.jar
+    Copy-Item -LiteralPath build\libs\TradePlus-0.1.2-smoke.jar -Destination test-server\plugins\TradePlus.jar
+    Copy-Item -LiteralPath build\libs\TradePlusTest-0.1.2.jar -Destination test-server\plugins\TradePlusTest.jar
+    # Integration tests must not inflate the public launch counter.
+    New-Item -ItemType Directory -Force -Path test-server\plugins\TradePlus | Out-Null
+    $testConfig = (Get-Content -LiteralPath src\main\resources\config.yml -Raw) -replace '(launch-counter:\s*\r?\n\s*enabled:) true', '$1 false'
+    Set-Content -LiteralPath test-server\plugins\TradePlus\config.yml -Value $testConfig -Encoding utf8
     @'
 server-ip=127.0.0.1
 server-port=25579
