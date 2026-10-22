@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/icon.png" width="192" height="192" alt="TradePlus 图标">
+  <img src="assets/icon.png" width="192" height="192" alt="Villager Trade Plus 图标">
 </p>
 
-# TradePlus
+# Villager Trade Plus
 
 在原版村民交易界面中预览未来交易，双击 F 重刷整套交易。
 
@@ -14,7 +14,7 @@
 ![Java 25](https://img.shields.io/badge/Java-25-orange)
 ![GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
 
-[English](README.md) · 简体中文
+[English](README.md) · 简体中文 · [Modrinth](https://modrinth.com/project/villagertradeplus)
 
 ## 功能
 
@@ -28,11 +28,13 @@
 
 已在 **Paper 26.3 build 211 / Java 25** 测试。推测其他 Paper 26.3 构建也可运行，但尚未验证。其他 Minecraft 版本（包括 26.1、26.2 和 1.21.x）会在启动时被拒绝，需要另做内部适配；原因见 [Paper 内部接口说明](https://docs.papermc.io/paper/dev/internals/)。
 
-从 [Releases](https://github.com/leonsama/TradePlus/releases/latest) 下载，或使用 `./gradlew build` 构建，将 `TradePlus-x.x.x.jar` 放入 `plugins/` 后重启。无需客户端 Mod 或额外前置。升级时替换旧 JAR；若已安装 TradeCycle 或 VillagerVision，请移除它们。
+从 [Modrinth](https://modrinth.com/project/villagertradeplus) 或 [Releases](https://github.com/leonsama/VillagerTradePlus/releases/latest) 下载，或使用 `./gradlew build` 构建，将 `VillagerTradePlus-x.x.x.jar` 放入 `plugins/` 后重启。无需客户端 Mod 或额外前置。升级时替换旧 JAR；若已安装 TradeCycle 或 VillagerVision，请移除它们。
 
 双击 F 默认间隔为 **350 ms**，冷却 **500 ms**。F 指原版“交换副手”绑定动作，鼠标需要位于交易界面的物品格上。
 
 ## 配置
+
+为兼容旧版升级，内部插件名、配置目录及命令继续使用 `TradePlus`。
 
 `plugins/TradePlus/config.yml`：
 

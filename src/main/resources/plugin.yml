@@ -4,7 +4,7 @@ main: dev.tradeplus.TradePlus
 api-version: '26.3'
 softdepend: [TradeCycle, VillagerVision]
 description: 原版交易界面内预览全部交易，双击 F 重刷整套交易。
-website: https://github.com/leonsama/TradePlus
+website: https://github.com/leonsama/VillagerTradePlus
 authors: [TradePlus contributors, Salvador Reyna, TradeCycle Authors and Contributors]
 commands:
   tradeplus:

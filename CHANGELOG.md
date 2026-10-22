@@ -1,5 +1,11 @@
 # 更新记录
 
+## 0.1.3
+
+- 展示名改为 Villager Trade Plus，发布包改为 `VillagerTradePlus`，更新 GitHub 仓库地址。
+- 双语 README 加入 Modrinth 项目链接。
+- 保留内部插件名、`plugins/TradePlus/` 配置目录、`/tradeplus` 命令、权限、村民数据标识及现有计数器，兼容旧版升级。
+
 ## 0.1.2
 
 - README 顶部改用 Moe Counter，中文文档重命名为 `README.zh-hans.md`，移除底部计数提示。

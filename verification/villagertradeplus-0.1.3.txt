@@ -1,0 +1,7 @@
+Villager Trade Plus 0.1.3 release verification
+Date: 2026-10-22
+Java: Microsoft OpenJDK 25.0.1
+JUnit: 17 passed
+Release JAR: VillagerTradePlus-0.1.3.jar
+Runtime Java code unchanged from 0.1.2; only branding, documentation, build metadata and test artifact paths updated.
+Paper server regression not rerun for this metadata-only release; see tradeplus-0.1.2.txt for prior server results.

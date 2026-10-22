@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/icon.png" width="192" height="192" alt="TradePlus icon">
+  <img src="assets/icon.png" width="192" height="192" alt="Villager Trade Plus icon">
 </p>
 
-# TradePlus
+# Villager Trade Plus
 
 Preview future villager trades and reroll the entire trade set, right inside the vanilla trading screen.
 
@@ -14,7 +14,7 @@ Preview future villager trades and reroll the entire trade set, right inside the
 ![Java 25](https://img.shields.io/badge/Java-25-orange)
 ![GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
 
-English · [简体中文](README.zh-hans.md)
+English · [简体中文](README.zh-hans.md) · [Modrinth](https://modrinth.com/project/villagertradeplus)
 
 ## Features
 
@@ -28,11 +28,13 @@ The first preview generates and saves future trades, which are applied as the vi
 
 Tested on **Paper 26.3 build 211 / Java 25**. Other Paper 26.3 builds are expected to work, but are untested. Other Minecraft versions (including 26.1, 26.2 and 1.21.x) are rejected at startup and need a separate internal adapter. See [Paper's internals guidance](https://docs.papermc.io/paper/dev/internals/).
 
-Download the JAR from [Releases](https://github.com/leonsama/TradePlus/releases/latest), or build with `./gradlew build`. Place `TradePlus-x.x.x.jar` in `plugins/` and restart. No client mods or extra plugins. Replace older TradePlus JARs; remove TradeCycle and VillagerVision if installed.
+Download the JAR from [Modrinth](https://modrinth.com/project/villagertradeplus) or [Releases](https://github.com/leonsama/VillagerTradePlus/releases/latest), or build with `./gradlew build`. Place `VillagerTradePlus-x.x.x.jar` in `plugins/` and restart. No client mods or extra plugins. Replace older TradePlus/VillagerTradePlus JARs; remove TradeCycle and VillagerVision if installed.
 
 Double-tap F within **350 ms**; rerolls have a **500 ms** cooldown. F means your vanilla “swap offhand” binding, with the cursor over an inventory slot.
 
 ## Configuration
+
+The internal plugin name, configuration folder and commands remain `TradePlus` for upgrade compatibility.
 
 `plugins/TradePlus/config.yml`:
 
