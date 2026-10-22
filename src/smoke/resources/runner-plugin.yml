@@ -1,0 +1,11 @@
+name: TradePlusTest
+version: 1.0
+main: dev.tradeplus.SmokeRunner
+api-version: '26.3'
+depend: [TradePlus]
+commands:
+  smoke:
+    permission: tradeplustest.admin
+permissions:
+  tradeplustest.admin:
+    default: op

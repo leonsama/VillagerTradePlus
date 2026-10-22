@@ -1,0 +1,13 @@
+features:
+  reroll:
+    # 关闭后不接管双击 F；村民的正常交易不受影响。
+    enabled: true
+  preview:
+    # 关闭后不显示未来交易；已保存的交易计划仍会在升级时兑现。
+    enabled: true
+
+# F 指“交换副手”绑定动作。仅在交易界面的物品格上快速按两次触发。
+double-press-millis: 350
+cycle-cooldown-millis: 500
+# 最大操作距离（方块）。
+interaction-distance: 6.0

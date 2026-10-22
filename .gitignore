@@ -1,0 +1,13 @@
+.gradle/
+build/
+upstream/
+.tools/
+paper-metadata.xml
+*.log
+.idea/
+*.iml
+cache/
+libraries/
+versions/
+test-server/
+dist/

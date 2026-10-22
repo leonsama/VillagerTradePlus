@@ -1,0 +1,51 @@
+plugins { id 'java' }
+
+group = 'dev.tradeplus'
+version = '0.1.1'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.211-stable'
+    compileOnly 'io.netty:netty-transport:4.2.15.Final'
+    testImplementation 'io.netty:netty-transport:4.2.15.Final'
+    testImplementation 'io.papermc.paper:paper-api:26.3.build.211-stable'
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 25 }
+processResources { filesMatching('plugin.yml') { expand(version: project.version) } }
+test { useJUnitPlatform(); jvmArgs '-XX:+EnableDynamicAgentLoading' }
+jar { from('LICENSE', 'NOTICE.md'); into('licenses') { from('licenses') } }
+tasks.register('sourceArchive', Zip) {
+    archiveClassifier = 'source'
+    from('.') { include 'src/**', 'gradle/**', 'gradlew', 'gradlew.bat', '*.gradle', 'gradle.lockfile', '*.md', 'LICENSE', 'licenses/**', 'verification/**', 'assets/**', '*.ps1', '.gitignore', '.gitattributes' }
+}
+assemble.dependsOn sourceArchive
+dependencyLocking { lockAllConfigurations() }
+
+sourceSets {
+    smoke {
+        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+        compileClasspath += files('versions/26.3/paper-26.3.jar') + fileTree('libraries') { include '**/*.jar' }
+    }
+}
+tasks.register('smokeJar', Jar) {
+    dependsOn smokeClasses
+    archiveClassifier = 'smoke'
+    from sourceSets.main.output
+    from(sourceSets.smoke.output) { exclude 'runner-plugin.yml' }
+}
+tasks.register('smokeRunnerJar', Jar) {
+    dependsOn smokeClasses
+    archiveBaseName = 'TradePlusTest'
+    from(sourceSets.smoke.output) { include 'dev/tradeplus/SmokeRunner.class' }
+    from('src/smoke/resources/runner-plugin.yml') { rename { 'plugin.yml' } }
+}
