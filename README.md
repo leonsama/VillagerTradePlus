@@ -51,7 +51,7 @@ interaction-distance: 6.0
 
 Run `/tradeplus reload` and reopen the trading screen after changes. Disabling previews keeps saved plans intact; rerolling always replaces the whole plan.
 
-A tiny vanity counter QAQ — keeping it on makes the author happy (〃'▽'〃)! No player or device details attached; disable with `launch-counter.enabled: false`.
+[A tiny vanity counter](https://count.getloli.com/@TradePlus-launch?theme=booru-lewd&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto) QAQ — keeping it on makes the author happy (〃'▽'〃)! No player or device details attached; disable with `launch-counter.enabled: false`.
 
 Permissions: `tradeplus.use` and `tradeplus.cycle` default to everyone; `tradeplus.admin` defaults to operators.
 

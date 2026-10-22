@@ -51,7 +51,7 @@ interaction-distance: 6.0
 
 修改后执行 `/tradeplus reload`，并重新打开交易窗口。关闭预览不会删除已保存的计划；重刷始终更新整套计划。
 
-作者的小小虚荣心 QAQ，保持加载计数开启会让作者很开心 (〃'▽'〃)！不附带玩家或设备信息，可用 `launch-counter.enabled: false` 关闭。
+[启动计数器](https://count.getloli.com/@TradePlus-launch?theme=booru-lewd&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto) QAQ，保持加载计数开启会让作者很开心 (〃'▽'〃)！不附带玩家或设备信息，可用 `launch-counter.enabled: false` 关闭。
 
 权限：`tradeplus.use`、`tradeplus.cycle` 默认允许所有玩家；`tradeplus.admin` 默认仅 OP。
 
