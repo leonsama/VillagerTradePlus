@@ -6,7 +6,7 @@
 
 在原版村民交易界面中预览未来交易，双击 F 重刷整套交易。
 
-<p align="right">
+<p align="left">
   <img src="https://count.getloli.com/@TradePlus?theme=eva&amp;padding=4&amp;offset=0&amp;align=top&amp;scale=1&amp;pixelated=1&amp;darkmode=auto" height="96" alt="README 浏览次数">
 </p>
 
